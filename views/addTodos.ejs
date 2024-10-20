@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<main class="container mx-auto mt-10">
+  <h2 class="text-2xl font-bold mb-4">Add a new Todo</h2>
+
+  <form action="/add" method="POST" class="bg-white p-6 rounded shadow">
+    <div class="mb-4">
+      <label for="name" class="block text-gray-700">Todo Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="border border-gray-300 p-2 rounded w-full"
+      />
+    </div>
+    <div class="mb-4">
+      <label for="description" class="block text-gray-700">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        class="border border-gray-300 p-2 rounded w-full"
+      ></textarea>
+    </div>
+    <div class="mb-4">
+      <label for="date" class="block text-gray-700">Date</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        class="border border-gray-300 p-2 rounded w-full"
+      />
+    </div>
+    <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Add Todo</button>
+  </form>
+</main>
+
+<%- include('partials/footer') %>
