@@ -1,0 +1,49 @@
+<div
+  id="editModal"
+  class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+>
+  <div class="bg-white p-8 w-2/5 rounded-lg shadow-lg relative">
+    <button
+      id="closeModal"
+      class="absolute top-4 right-4 text-2xl text-gray-500 hover:text-gray-700"
+    >
+      <i class="fas fa-times"></i>
+    </button>
+    <h2 class="text-2xl font-bold mb-4 text-left">Edit Todo</h2>
+    <form id="editTodoForm" method="POST">
+      <input type="hidden" name="_method" value="PUT" />
+      <div class="mb-4">
+        <label for="editName" class="block mb-2 text-left">Todo Name</label>
+        <input
+          type="text"
+          id="editName"
+          name="name"
+          class="border border-gray-300 p-2 rounded w-full"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="editDescription" class="block mb-2 text-left">Description</label>
+        <textarea
+          id="editDescription"
+          name="description"
+          class="border border-gray-300 p-2 rounded w-full"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-4">
+        <label for="editDate" class="block mb-2 text-left">Due Date and Time</label>
+        <input
+          type="datetime-local"
+          id="editDate"
+          name="date"
+          class="border border-gray-300 p-2 rounded w-full"
+          required
+        />
+      </div>
+      <button type="submit" class="bg-primary text-white py-2 px-4 rounded">
+        Save Changes
+      </button>
+    </form>
+  </div>
+</div>

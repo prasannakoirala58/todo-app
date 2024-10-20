@@ -1,16 +1,19 @@
 const { validationResult } = require('express-validator');
 const Todo = require('../models/Todo');
 
-// List all todos (with filtering)
+// List all todos with filtering (done and upcoming)
 exports.getTodos = async (req, res) => {
   const { filter } = req.query;
   let todos;
 
   if (filter === 'done') {
+    // Get only done todos
     todos = await Todo.find({ isDone: true });
   } else if (filter === 'upcoming') {
-    todos = await Todo.find({ isDone: false });
+    // Get upcoming todos with a date greater than now
+    todos = await Todo.find({ date: { $gt: Date.now() } });
   } else {
+    // Get all todos
     todos = await Todo.find();
   }
 
@@ -24,13 +27,13 @@ exports.addTodo = async (req, res) => {
     return res.status(400).render('index', { errors: errors.array() });
   }
 
-  const { name, description } = req.body;
+  const { name, description, date } = req.body;
 
-  // Automatically set the date to the current date
+  // Create a new todo with a specified date
   const todo = new Todo({
     name,
     description,
-    date: Date.now(), // Automatically set the creation date
+    date: new Date(date),
   });
 
   await todo.save();
@@ -58,12 +61,13 @@ exports.deleteTodo = async (req, res) => {
 // Update an existing Todo
 exports.updateTodo = async (req, res) => {
   const { id } = req.params;
-  const { name, description } = req.body;
+  console.log('id', id);
+  const { name, description, date } = req.body;
 
   try {
     const todo = await Todo.findByIdAndUpdate(
       id,
-      { name, description },
+      { name, description, date: new Date(date) },
       { new: true } // Returns the updated document
     );
 

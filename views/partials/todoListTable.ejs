@@ -1,0 +1,49 @@
+<h2 class="text-2xl font-bold mb-4">Todos</h2>
+
+<table class="table-auto w-full text-left">
+  <thead>
+    <tr class="bg-secondary text-left text-primary">
+      <th class="px-4 py-2">Name</th>
+      <th class="px-4 py-2">Description</th>
+      <th class="px-4 py-2">Date</th>
+      <th class="px-4 py-2">Actions</th>
+    </tr>
+  </thead>
+  <tbody id="todo-list">
+    <% todos.forEach(todo => { %>
+    <tr class="border-b border-gray-300 hover:bg-gray-100" id="todo-<%= todo._id %>">
+      <td class="px-4 py-2 todo-name"><%= todo.name %></td>
+      <td class="px-4 py-2 todo-description"><%= todo.description %></td>
+      <td class="px-4 py-2"><%= new Date(todo.date).toLocaleString() %></td>
+      <td class="px-4 py-2 flex space-x-6 text-lg">
+        <!-- Mark as Done -->
+        <form class="mark-as-done-form" data-id="<%= todo._id %>" method="POST">
+          <button class="hover:text-green-700 transition duration-200">
+            <i
+              class="<%= todo.isDone ? 'fas fa-check-circle text-green-600' : 'far fa-circle' %>"
+            ></i>
+          </button>
+        </form>
+
+        <!-- Update (Edit) -->
+        <button
+          class="hover:text-yellow-600 transition duration-200 edit-todo"
+          data-id="<%= todo._id %>"
+          data-name="<%= todo.name %>"
+          data-description="<%= todo.description %>"
+          data-date="<%= new Date(todo.date).toISOString().slice(0, 16) %>"
+        >
+          <i class="fas fa-edit"></i>
+        </button>
+
+        <!-- Delete -->
+        <form class="delete-todo-form" data-id="<%= todo._id %>" method="POST">
+          <button class="hover:text-red-700 transition duration-200">
+            <i class="fas fa-trash"></i>
+          </button>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
