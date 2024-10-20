@@ -14,4 +14,117 @@
   <%- include('partials/editTodoModal') %>
 </main>
 
+<!-- Link to main.js file -->
+<!-- <script src="/public/main.js"></script> -->
+
+<!-- Place this script at the bottom of your index.ejs -->
+<script>
+  // Handle Mark as Done
+  document.querySelectorAll('.mark-as-done-form').forEach((form) => {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const todoId = this.dataset.id;
+
+      fetch(`/done/${todoId}?_method=PUT`, {
+        method: 'POST',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const icon = this.querySelector('i');
+          if (data.isDone) {
+            icon.classList.remove('far', 'fa-circle');
+            icon.classList.add('fas', 'fa-check-circle', 'text-green-600');
+          } else {
+            icon.classList.remove('fas', 'fa-check-circle', 'text-green-600');
+            icon.classList.add('far', 'fa-circle');
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    });
+  });
+
+  // Handle Delete
+  document.querySelectorAll('.delete-todo-form').forEach((form) => {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const todoId = this.dataset.id;
+
+      fetch(`/delete/${todoId}?_method=DELETE`, {
+        method: 'POST',
+      })
+        .then((response) => response.json())
+        .then(() => {
+          document.getElementById(`todo-${todoId}`).remove();
+        })
+        .catch((error) => console.error('Error:', error));
+    });
+  });
+
+  // Modal handling
+  const editModal = document.getElementById('editModal');
+  const editForm = document.getElementById('editTodoForm');
+  const closeModalBtn = document.getElementById('closeModal');
+
+  // Open modal and set data
+  document.querySelectorAll('.edit-todo').forEach((button) => {
+    button.addEventListener('click', function () {
+      const todoId = this.dataset.id;
+      const todoName = this.dataset.name;
+      const todoDescription = this.dataset.description;
+      const todoDate = this.dataset.date;
+
+      // Set the form data
+      document.getElementById('editTodoId').value = todoId;
+      document.getElementById('editName').value = todoName;
+      document.getElementById('editDescription').value = todoDescription;
+      document.getElementById('editDate').value = todoDate;
+
+      // Show modal
+      editModal.classList.remove('hidden');
+    });
+  });
+
+  // Close modal button
+  closeModalBtn.addEventListener('click', () => {
+    editModal.classList.add('hidden');
+  });
+
+  // Handle form submission
+  editForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const todoId = document.getElementById('editTodoId').value;
+    const formData = new FormData(this);
+
+    // Convert FormData to JSON
+    const data = Object.fromEntries(formData.entries());
+
+    fetch(`/update/${todoId}?_method=PUT`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          // Hide modal first
+          editModal.classList.add('hidden');
+          // Then reload page
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  });
+
+  // Optional: Close modal when clicking outside
+  window.addEventListener('click', (e) => {
+    if (e.target === editModal) {
+      editModal.classList.add('hidden');
+    }
+  });
+</script>
+
 <%- include('partials/footer') %>

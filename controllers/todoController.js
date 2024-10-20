@@ -58,22 +58,36 @@ exports.deleteTodo = async (req, res) => {
   res.json({ message: 'Todo deleted successfully' });
 };
 
-// Update an existing Todo
+// Update a Todo
 exports.updateTodo = async (req, res) => {
   const { id } = req.params;
-  console.log('id', id);
+  console.log('This is body', req.body);
   const { name, description, date } = req.body;
 
+  console.log('body aayo ta?', name, description, date);
+
   try {
+    // Parse the date string to a valid Date object
+    const parsedDate = new Date(date);
+
+    // Check if the parsed date is valid
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: 'Invalid date' });
+    }
+
+    // Update the todo with the new data
     const todo = await Todo.findByIdAndUpdate(
       id,
-      { name, description, date: new Date(date) },
+      { name, description, date: parsedDate },
       { new: true } // Returns the updated document
     );
 
     if (!todo) {
+      console.log('Todo vettiyena rey');
       return res.status(404).json({ message: 'Todo not found' });
     }
+
+    console.log('Todo vann', todo);
 
     res.sendStatus(200); // Send success status without sending back JSON
   } catch (error) {
